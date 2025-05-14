@@ -1,0 +1,10 @@
+boto3
+websockets
+pandas
+joblib
+seaborn
+matplotlib
+scikit-learn
+jupyterlab
+notebook
+voila
