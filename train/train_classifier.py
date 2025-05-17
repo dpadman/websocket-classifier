@@ -8,10 +8,15 @@ import glob
 import sys
 
 # Load all labeled CSVs
-csv_files = glob.glob("data/*_labeled_*.csv")
-print(f"csv_files: {csv_files}")
+encrypt=sys.argv[1]
+csv_files = glob.glob(f"data-{encrypt}/*_labeled_*.csv")
+print(f"csv_files: {len(csv_files)}")
 dfs = [pd.read_csv(f) for f in csv_files]
 df = pd.concat(dfs, ignore_index=True)
+
+df["label"] = pd.to_numeric(df["label"], errors='coerce')
+df = df.dropna(subset=["label"])
+df["label"] = df["label"].astype(int)
 
 # Features selected from nDPI CSV
 features = ["duration", "c_to_s_pkts", "s_to_c_pkts", "c_to_s_bytes", "s_to_c_bytes"]
@@ -34,8 +39,8 @@ print("Model performance: Logistic Regression Classifier")
 print(classification_report(y_test, log_clf.predict(X_test)))
 
 # Save model
-joblib.dump(clf, "model/ai_ws_classifier.joblib")
-print("Model saved to model/ai_ws_classifier.joblib")
+joblib.dump(clf, f"model/ai_{encrypt}_classifier.joblib")
+print(f"Model saved to model/ai_{encrypt}_classifier.joblib")
 
-joblib.dump(log_clf, "model/ai_ws_classifier_logistic.joblib")
-print("Model saved to model/ai_ws_classifier_logistic.joblib")
+joblib.dump(log_clf, f"model/ai_{encrypt}_classifier_logistic.joblib")
+print(f"Model saved to model/ai_{encrypt}_classifier_logistic.joblib")
