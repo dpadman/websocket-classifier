@@ -26,7 +26,7 @@ X = df[features]
 y = df["label"]
 
 scaler = MinMaxScaler()
-X_scaled = scaler.fit_transform(X)
+X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=features)
 joblib.dump(scaler, f"model/scaler_{encrypt}.joblib")
 
 # Split and train
