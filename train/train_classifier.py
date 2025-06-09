@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
 import joblib
 import glob
 import sys
@@ -33,6 +34,10 @@ joblib.dump(scaler, f"model/scaler_{encrypt}.joblib")
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, stratify=y, random_state=42)
 clf = RandomForestClassifier(n_estimators=100, random_state=42)
 clf.fit(X_train, y_train)
+
+print("Feature importances:")
+for f, imp in zip(features, clf.feature_importances_):
+    print(f"{f}: {imp:.4f}")
 
 log_clf = LogisticRegression(max_iter=1000, random_state=42)
 log_clf.fit(X_train, y_train)
